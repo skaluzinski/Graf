@@ -62,35 +62,6 @@ void generateEdges(graph_t* graph) {
         }
     }
 }
-    int nodeNum;
-    for(int row = 0; row < graph->rows; row++){
-        for(int col = 0; col < graph->cols; col++){
-            nodeNum =row*graph->cols+col ;
-            if( row == 0 ) {//?generate lower edge
-                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
-            }
-            else if( row == graph->rows ) { //?generate upper
-                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
-            }
-            else { //?generate both
-                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
-                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
-            }
-
-            if( col == 0 ) {//?generate right edge
-                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
-            }
-            else if( col == graph->cols) { //?generate left
-                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
-            }
-            else {//generate both
-                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
-                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
-            }
-            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,(graph->nodes + nodeNum)->right,(graph->nodes + nodeNum)->left,(graph->nodes + nodeNum)->up,(graph->nodes + nodeNum)->down);
-        }
-    }
-}
 // format pliku:
 //     col row
 //         up down right left
@@ -121,17 +92,7 @@ int writeGraphToFile(graph_t graph, char* name){
             if((graph.nodes + col + row*graph.cols)->down != -1){
                 sprintf(strdown, "%d :%lf",col+row*graph.cols+graph.cols, (graph.nodes + col + row*graph.cols)->down);
             }
-            __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE
             fprintf(fptr,"\t\t%d :%lf");
         }
     }
-}
-int generateGraph(graph_t graph, char* name){
-    if(graph.min > graph.max)
-        {
-            printf("Niepowodzenie generacji, minimalny zakres wartości wagi krawędzi jest większy od maksymalnego.\n");
-            return -1;
-        }
-    graph.nodes = malloc(graph.cols * graph.cols *sizeof(node_t));
-    generateEdges(graph);
 }
