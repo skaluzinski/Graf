@@ -31,36 +31,66 @@ int doEdgeExists(/*double probability*/){
     }
     return -1;
 }
-
-void generateEdges(graph_t graph) {
-    for(int row = 0; row < graph.rows; row++){
-        for(int col = 0; col < graph.cols; col++){
+void generateEdges(graph_t* graph) {
+    graph->nodes = malloc(graph->cols * graph->rows *sizeof(node_t));
+    int nodeNum;
+    for(int row = 0; row < graph->rows; row++){
+        for(int col = 0; col < graph->cols; col++){
+            nodeNum =row*graph->cols+col ;
             if( row == 0 ) {//?generate lower edge
-                (graph.nodes + col + row*graph.cols)->down = randomNumber(graph.min,graph.max);
+                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
             }
-            else if( row == graph.rows ) { //?generate upper
-                (graph.nodes + col + row*graph.cols)->up = randomNumber(graph.min,graph.max);
+            else if( row == graph->rows ) { //?generate upper
+                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
             }
             else { //?generate both
-                (graph.nodes + col + row*graph.cols)->up = randomNumber(graph.min,graph.max);
-                (graph.nodes + col + row*graph.cols)->down = randomNumber(graph.min,graph.max);
+                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
+                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
             }
 
             if( col == 0 ) {//?generate right edge
-                (graph.nodes + col + row*graph.cols)->right = randomNumber(graph.min,graph.max);
+                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
             }
-            else if( col == graph.cols) { //?generate left
-                (graph.nodes + col + row*graph.cols)->left = randomNumber(graph.min,graph.max);
+            else if( col == graph->cols) { //?generate left
+                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
             }
             else {//generate both
-                (graph.nodes + col + row*graph.cols)->right = randomNumber(graph.min,graph.max);
-                (graph.nodes + col + row*graph.cols)->left = randomNumber(graph.min,graph.max);
+                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
+                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
             }
-            printf("W%d \n\t%lf %lf %lf %lf \n",col+row*graph.cols,(graph.nodes + col + row*graph.cols)->right,(graph.nodes + col + row*graph.cols)->left,(graph.nodes + col + row*graph.cols)->up,(graph.nodes + col + row*graph.cols)->down);
+            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,(graph->nodes + nodeNum)->right,(graph->nodes + nodeNum)->left,(graph->nodes + nodeNum)->up,(graph->nodes + nodeNum)->down);
         }
     }
 }
+    int nodeNum;
+    for(int row = 0; row < graph->rows; row++){
+        for(int col = 0; col < graph->cols; col++){
+            nodeNum =row*graph->cols+col ;
+            if( row == 0 ) {//?generate lower edge
+                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
+            }
+            else if( row == graph->rows ) { //?generate upper
+                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
+            }
+            else { //?generate both
+                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
+                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
+            }
 
+            if( col == 0 ) {//?generate right edge
+                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
+            }
+            else if( col == graph->cols) { //?generate left
+                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
+            }
+            else {//generate both
+                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
+                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
+            }
+            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,(graph->nodes + nodeNum)->right,(graph->nodes + nodeNum)->left,(graph->nodes + nodeNum)->up,(graph->nodes + nodeNum)->down);
+        }
+    }
+}
 // format pliku:
 //     col row
 //         up down right left
@@ -79,7 +109,6 @@ int writeGraphToFile(graph_t graph, char* name){
     fprintf(fptr,"%d %d\n",graph.cols,graph.rows);
     for(row = 0; row< graph.rows; row++){
         for(col = 0; col < graph.cols; col++){
-            lineToWrite = "\t\t";
             if((graph.nodes + col + row*graph.cols)->left != -1){
                 sprintf(strleft, "%d :%lf",col+row*graph.cols-1, (graph.nodes + col + row*graph.cols)->left);
             }
@@ -92,10 +121,7 @@ int writeGraphToFile(graph_t graph, char* name){
             if((graph.nodes + col + row*graph.cols)->down != -1){
                 sprintf(strdown, "%d :%lf",col+row*graph.cols+graph.cols, (graph.nodes + col + row*graph.cols)->down);
             }
-            strcat(lineToWrite,strup);
-            strcat(lineToWrite,strup);
-            strcat(lineToWrite,strup);
-            strcat(lineToWrite,strup);
+            __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE
             fprintf(fptr,"\t\t%d :%lf");
         }
     }
