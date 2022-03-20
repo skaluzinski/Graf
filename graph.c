@@ -2,6 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#define COEF 0.0001
 
 typedef struct node{
     double left;
@@ -20,7 +21,7 @@ typedef struct graph{
 
 //  zmieniłam, zeby waga była wygenerowana (min,max)
 double randomNumber(double min,double max){
-    double randNum =((float)(rand()%(int)max)+min)*((float)rand()/RAND_MAX);   
+    double randNum =((float)(rand()%(int)max)+min)*(((float)rand()/RAND_MAX)+COEF);   
 
     return randNum;
 }
@@ -110,7 +111,7 @@ int main()
     generateEdges(&graph);
     
 
-    printf("W right left up down\n");
+    printf("W        right      left     up      down\n");
     
     printf("%f",(graph.nodes +8)->down);
     return 0;
