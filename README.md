@@ -1,1 +1,2 @@
-"Projekt na zaj©ciach z J©zyk¢w i Metod Programowania 2,Angelina Sudenkova oraz Sebastian Kaˆuziäski" 
+"Projekt na zajï¿½ciach z Jï¿½zykï¿½w i Metod Programowania 2,Angelina Sudenkova oraz Sebastian Kaï¿½uziï¿½ski" 
+"Program graf ma na celu obsÅ‚ugiwanie grafÃ³w. Program dziaÅ‚a w trybie nie interaktywnym. Program pozwala na przeszukiwanie grafu przy pomocy algorytmu BFS (breadth-first search) jak i rÃ³wnieÅ¼ na znalezienie najkrÃ³tszej Å›cieÅ¼ki przy pomocy algorytmu Dijkstry. Program czyta i zapisuje grafy w ustalonym formacie "
