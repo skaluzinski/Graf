@@ -19,8 +19,7 @@ typedef struct graph{
 } graph_t;
 
 double randomNumber(double min,double max){
-    double randNum =((float)rand()/RAND_MAX)*(float)(max);
-
+    double randNum =((float)(rand()%(int)max)+min)*((float)rand()/RAND_MAX);  
     return randNum;
 }
 
@@ -31,12 +30,17 @@ int doEdgeExists(/*double probability*/){
     }
     return -1;
 }
+
 void generateEdges(graph_t* graph) {
     graph->nodes = malloc(graph->cols * graph->rows *sizeof(node_t));
     int nodeNum;
     for(int row = 0; row < graph->rows; row++){
         for(int col = 0; col < graph->cols; col++){
             nodeNum =row*graph->cols+col ;
+            (graph->nodes + nodeNum)->down = -1;
+            (graph->nodes + nodeNum)->up = -1;
+            (graph->nodes + nodeNum)->left = -1;
+            (graph->nodes + nodeNum)->right = -1;
             if( row == 0 ) {//?generate lower edge
                 (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
             }
@@ -62,10 +66,6 @@ void generateEdges(graph_t* graph) {
         }
     }
 }
-// format pliku:
-//     col row
-//         up down right left
-
 int writeGraphToFile(graph_t graph, char* name){
     FILE *fptr;
     int row;
@@ -74,25 +74,30 @@ int writeGraphToFile(graph_t graph, char* name){
     char strup[150];
     char strright[150];
     char lineToWrite[600];
-    int col;
+    int col,nodeNum;
     node_t tempNode;
     fptr = fopen(name, "w");
     fprintf(fptr,"%d %d\n",graph.cols,graph.rows);
     for(row = 0; row< graph.rows; row++){
         for(col = 0; col < graph.cols; col++){
-            if((graph.nodes + col + row*graph.cols)->left != -1){
-                sprintf(strleft, "%d :%lf",col+row*graph.cols-1, (graph.nodes + col + row*graph.cols)->left);
+            nodeNum =row*graph.cols+col ;
+            fprintf(fptr,"   ");
+            if((graph.nodes + nodeNum)->left != -1){
+                fprintf(fptr,"  %d :%f",nodeNum-1, (graph.nodes + nodeNum)->left);
             }
-            if((graph.nodes + col + row*graph.cols)->right != -1){
-                sprintf(strright, "%d :%lf",col+row*graph.cols+1, (graph.nodes + col + row*graph.cols)->right);
+            if((graph.nodes + nodeNum)->right != -1){
+                fprintf(fptr,"  %d :%f",nodeNum+1, (graph.nodes + nodeNum)->right);
             }
-            if((graph.nodes + col + row*graph.cols)->up != -1){
-                sprintf(strup, "%d :%lf",col+row*graph.cols-graph.cols, (graph.nodes + col + row*graph.cols)->up);
+            if((graph.nodes + nodeNum)->up != -1){
+                fprintf(fptr,"  %d :%f",nodeNum-graph.cols, (graph.nodes + nodeNum)->up);
             }
-            if((graph.nodes + col + row*graph.cols)->down != -1){
-                sprintf(strdown, "%d :%lf",col+row*graph.cols+graph.cols, (graph.nodes + col + row*graph.cols)->down);
+            if((graph.nodes + nodeNum)->down != -1){
+                fprintf(fptr,"  %d :%f",nodeNum+graph.cols, (graph.nodes + nodeNum)->down);
             }
-            fprintf(fptr,"\t\t%d :%lf");
+            fprintf(fptr,"\n");
+            
         }
     }
+    fclose(fptr);
+    return 0;
 }
