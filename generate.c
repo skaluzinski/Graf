@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-
+#define EMPTY -1
 typedef struct node{
     double left;
     double right;
@@ -33,22 +33,22 @@ int doEdgeExists(/*double probability*/){
 
 void generateEdges(graph_t* graph) {
     graph->nodes = malloc(graph->cols * graph->rows *sizeof(node_t));
-    int nodeNum;
+    int nodeNum,row,col;
     node_t *tempNode;
     double min = graph->min;
     double max = graph->max; 
-    for(int row = 0; row < graph->rows; row++){
-        for(int col = 0; col < graph->cols; col++){
+    for(row = 0; row < graph->rows; row++){
+        for(col = 0; col < graph->cols; col++){
             nodeNum =row*graph->cols+col ;
             tempNode= graph->nodes + nodeNum;
-            tempNode->down = -1;
-            tempNode->up = -1;
-            tempNode->left = -1;
-            tempNode->right = -1;
+            tempNode->down = EMPTY;
+            tempNode->up = EMPTY;
+            tempNode->left = EMPTY;
+            tempNode->right = EMPTY;
             if( row == 0 ) {//?generate lower edge
                 tempNode->down = randomNumber(min,max);
             }
-            else if( row == graph->rows ) { //?generate upper
+            else if( row == graph->rows -1) { //?generate upper
                 tempNode->up = randomNumber(min,max);
             }
             else { //?generate both
@@ -59,7 +59,7 @@ void generateEdges(graph_t* graph) {
             if( col == 0 ) {//?generate right edge
                 tempNode->right = randomNumber(min,max);
             }
-            else if( col == graph->cols) { //?generate left
+            else if( col == graph->cols -1) { //?generate left
                 tempNode->left = randomNumber(min,max);
             }
             else {//generate both
@@ -67,18 +67,13 @@ void generateEdges(graph_t* graph) {
                 tempNode->left = randomNumber(min,max);
             }
             printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,tempNode->right,tempNode->left,tempNode->up,tempNode->down);
+            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,tempNode->right,tempNode->left,tempNode->up,tempNode->down);
         }
     }
 }
 int writeGraphToFile(graph_t graph, char* name){
     FILE *fptr;
-    int row;
-    char strleft[150];
-    char strdown[150];
-    char strup[150];
-    char strright[150];
-    char lineToWrite[600];
-    int col,nodeNum;
+    int row, col, nodeNum;
     node_t tempNode;
     fptr = fopen(name, "w");
     fprintf(fptr,"%d %d\n",graph.cols,graph.rows);
@@ -86,16 +81,16 @@ int writeGraphToFile(graph_t graph, char* name){
         for(col = 0; col < graph.cols; col++){
             nodeNum =row*graph.cols+col ;
             fprintf(fptr,"   ");
-            if((graph.nodes + nodeNum)->left != -1){
+            if((graph.nodes + nodeNum)->left != EMPTY){
                 fprintf(fptr,"  %d :%f",nodeNum-1, (graph.nodes + nodeNum)->left);
             }
-            if((graph.nodes + nodeNum)->right != -1){
+            if((graph.nodes + nodeNum)->right != EMPTY){
                 fprintf(fptr,"  %d :%f",nodeNum+1, (graph.nodes + nodeNum)->right);
             }
-            if((graph.nodes + nodeNum)->up != -1){
+            if((graph.nodes + nodeNum)->up != EMPTY){
                 fprintf(fptr,"  %d :%f",nodeNum-graph.cols, (graph.nodes + nodeNum)->up);
             }
-            if((graph.nodes + nodeNum)->down != -1){
+            if((graph.nodes + nodeNum)->down != EMPTY){
                 fprintf(fptr,"  %d :%f",nodeNum+graph.cols, (graph.nodes + nodeNum)->down);
             }
             fprintf(fptr,"\n");
