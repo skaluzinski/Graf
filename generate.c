@@ -34,35 +34,39 @@ int doEdgeExists(/*double probability*/){
 void generateEdges(graph_t* graph) {
     graph->nodes = malloc(graph->cols * graph->rows *sizeof(node_t));
     int nodeNum;
+    node_t *tempNode;
+    double min = graph->min;
+    double max = graph->max; 
     for(int row = 0; row < graph->rows; row++){
         for(int col = 0; col < graph->cols; col++){
             nodeNum =row*graph->cols+col ;
-            (graph->nodes + nodeNum)->down = -1;
-            (graph->nodes + nodeNum)->up = -1;
-            (graph->nodes + nodeNum)->left = -1;
-            (graph->nodes + nodeNum)->right = -1;
+            tempNode= graph->nodes + nodeNum;
+            tempNode->down = -1;
+            tempNode->up = -1;
+            tempNode->left = -1;
+            tempNode->right = -1;
             if( row == 0 ) {//?generate lower edge
-                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
+                tempNode->down = randomNumber(min,max);
             }
             else if( row == graph->rows ) { //?generate upper
-                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
+                tempNode->up = randomNumber(min,max);
             }
             else { //?generate both
-                (graph->nodes + nodeNum)->up = randomNumber(graph->min,graph->max);
-                (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
+                tempNode->up = randomNumber(min,max);
+                tempNode->down = randomNumber(min,max);
             }
 
             if( col == 0 ) {//?generate right edge
-                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
+                tempNode->right = randomNumber(min,max);
             }
             else if( col == graph->cols) { //?generate left
-                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
+                tempNode->left = randomNumber(min,max);
             }
             else {//generate both
-                (graph->nodes + nodeNum)->right = randomNumber(graph->min,graph->max);
-                (graph->nodes + nodeNum)->left = randomNumber(graph->min,graph->max);
+                tempNode->right = randomNumber(min,max);
+                tempNode->left = randomNumber(min,max);
             }
-            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,(graph->nodes + nodeNum)->right,(graph->nodes + nodeNum)->left,(graph->nodes + nodeNum)->up,(graph->nodes + nodeNum)->down);
+            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,tempNode->right,tempNode->left,tempNode->up,tempNode->down);
         }
     }
 }
