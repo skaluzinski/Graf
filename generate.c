@@ -74,24 +74,25 @@ void generateEdges(graph_t* graph) {
 int writeGraphToFile(graph_t graph, char* name){
     FILE *fptr;
     int row, col, nodeNum;
-    node_t tempNode;
+    node_t *tempNode;
     fptr = fopen(name, "w");
     fprintf(fptr,"%d %d\n",graph.cols,graph.rows);
     for(row = 0; row< graph.rows; row++){
         for(col = 0; col < graph.cols; col++){
             nodeNum =row*graph.cols+col ;
+            tempNode= graph.nodes + nodeNum;
             fprintf(fptr,"   ");
-            if((graph.nodes + nodeNum)->left != EMPTY){
-                fprintf(fptr,"  %d :%f",nodeNum-1, (graph.nodes + nodeNum)->left);
+            if(tempNode->left != EMPTY){
+                fprintf(fptr,"  %d :%f",nodeNum-1, tempNode->left);
             }
-            if((graph.nodes + nodeNum)->right != EMPTY){
-                fprintf(fptr,"  %d :%f",nodeNum+1, (graph.nodes + nodeNum)->right);
+            if(tempNode->right != EMPTY){
+                fprintf(fptr,"  %d :%f",nodeNum+1, tempNode->right);
             }
-            if((graph.nodes + nodeNum)->up != EMPTY){
-                fprintf(fptr,"  %d :%f",nodeNum-graph.cols, (graph.nodes + nodeNum)->up);
+            if(tempNode->up != EMPTY){
+                fprintf(fptr,"  %d :%f",nodeNum-graph.cols, tempNode->up);
             }
-            if((graph.nodes + nodeNum)->down != EMPTY){
-                fprintf(fptr,"  %d :%f",nodeNum+graph.cols, (graph.nodes + nodeNum)->down);
+            if(tempNode->down != EMPTY){
+                fprintf(fptr,"  %d :%f",nodeNum+graph.cols, tempNode->down);
             }
             fprintf(fptr,"\n");
             
