@@ -3,6 +3,8 @@
 #include <time.h>
 #include <stdlib.h>
 #define EMPTY -1
+#define NODE 1
+#define VERTEX 2
 typedef struct node{
     double left;
     double right;
@@ -18,10 +20,12 @@ typedef struct graph{
     node_t* nodes;
 } graph_t;
 
+
 double randomNumber(double min,double max){
     double randNum =((float)(rand()%(int)max)+min)*((float)rand()/RAND_MAX);  
     return randNum;
 }
+
 
 int doEdgeExists(/*double probability*/){
     double random = ((double) rand()) / RAND_MAX;
@@ -31,8 +35,13 @@ int doEdgeExists(/*double probability*/){
     return -1;
 }
 
+
 void generateEdges(graph_t* graph) {
     graph->nodes = malloc(graph->cols * graph->rows *sizeof(node_t));
+    if(graph->nodes == NULL){
+        printf("Out of memory.");
+        return;
+    }
     int nodeNum,row,col;
     node_t *tempNode;
     double min = graph->min;
@@ -65,12 +74,12 @@ void generateEdges(graph_t* graph) {
             else {//generate both
                 tempNode->right = randomNumber(min,max);
                 tempNode->left = randomNumber(min,max);
-            }
-            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,tempNode->right,tempNode->left,tempNode->up,tempNode->down);
-            printf("W%d \n\t%lf %lf %lf %lf \n",nodeNum,tempNode->right,tempNode->left,tempNode->up,tempNode->down);
+            }          
         }
     }
 }
+
+
 int writeGraphToFile(graph_t graph, char* name){
     FILE *fptr;
     int row, col, nodeNum;
@@ -100,4 +109,63 @@ int writeGraphToFile(graph_t graph, char* name){
     }
     fclose(fptr);
     return 0;
+}
+graph_t readGraph(char *name){
+    FILE *fptr;
+    char line[1024];
+    int rows,cols,nodeNum,difference;
+    int lineNum = 0;
+    char delim[] = " :\n";
+    char *linePtr;
+    node_t *tempNode;
+    int currentPart = NODE;
+    fptr = fopen(name,"r");
+    if(fptr == NULL){
+        printf("Failure while opening file named %s",name);
+        // return NULL;
+        //TODO
+        //  Poprawić wartość zwracaną
+    }
+    fscanf(fptr,"%d %d ",&cols,&rows);
+    graph_t graph;
+    graph.nodes = malloc(cols * rows *sizeof(node_t));
+    while(!feof(fptr)) {
+        fgets(line, sizeof line, fptr);
+        linePtr = strtok(line, delim);
+        while(linePtr !=NULL)
+        {
+            if(currentPart == NODE){
+                nodeNum = atoi(linePtr);
+                currentPart = VERTEX;
+            }
+            else{
+                difference = nodeNum-lineNum;
+                *tempNode = graph.nodes[lineNum];
+                tempNode->down = EMPTY;
+                tempNode->up = EMPTY;
+                tempNode->left = EMPTY;
+                tempNode->right = EMPTY;
+                if(difference == 1){
+                    tempNode->right = atof(linePtr); 
+                }
+                else if(difference == -1){
+                    tempNode->left = atof(linePtr); 
+                }
+                else if(difference == graph.cols){
+                    tempNode->up = atof(linePtr); 
+                }
+                else{
+                    tempNode->down = atof(linePtr); 
+                }
+                printf("  %d  :%lf",nodeNum,atof(linePtr));
+                currentPart = NODE;
+                
+            }
+		    linePtr = strtok(NULL, delim);
+        }
+        printf("\n");
+        lineNum++;
+    }
+    fclose(fptr);
+    return graph;
 }
