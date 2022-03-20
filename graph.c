@@ -8,7 +8,8 @@ typedef struct node{
     double left;
     double right;
     double up;
-    double down
+    double down;
+    int nodeNumber; // dodajemy numer wierzchołka 
 }node_t;
 
 typedef struct graph{
@@ -40,6 +41,8 @@ void generateEdges(graph_t* graph) {
     for(int row = 0; row < graph->rows; row++){
         for(int col = 0; col < graph->cols; col++){
             nodeNum =row*graph->cols+col ;
+            //Propozycja,żeby przechowywać numer wierzchołka
+            (graph->nodes+nodeNum)->nodeNumber = nodeNum; 
             if( row == 0 ) {//?generate lower edge
                 (graph->nodes + nodeNum)->down = randomNumber(graph->min,graph->max);
             }
