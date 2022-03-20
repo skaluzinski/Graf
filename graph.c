@@ -18,6 +18,7 @@ typedef struct graph{
     node_t* nodes;
 }graph_t;
 
+//  zmieniłam, zeby waga była wygenerowana (min,max)
 double randomNumber(double min,double max){
     double randNum =((float)(rand()%(int)max)+min)*((float)rand()/RAND_MAX);   
 
