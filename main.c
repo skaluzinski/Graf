@@ -1,21 +1,18 @@
 #include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdlib.h>
+#include<stdlib.h>
+#include<time.h>
 #include"graph.h"
-#include<windows.h>
 
-
-int main (int argc, char**argv){
- 
-    //testowanie funkcji, generujacej wagi
-    double min = atoi(argv[1]);
-    double max = atoi(argv[2]);
-
-    for(int i = 0; i < 10; i++){
-        //sprawdzanie generowania liczb
-        Sleep(1000);
-        double weight = generateWeight(min, max);
-        printf("Weight %d: %lf\n", i, weight);
-    }
+    int main(int argc, char **argv){
+        srand(time(NULL));
+        if(argc < 3){
+            fprintf(stderr,"Proszę podać jako pierwszy argument ilość kolumn, a drugi ilość wierszy do wygenerowania");
+            return 1;
+        }
+        int columns = atoi(argv[1]);
+        int rows = atoi(argv[2]);
+        Graph *graph =genGraph(2, 19, columns, rows);
+        printf("number of vert: %d ", graph->nOfVert);
+        printGraph(graph);
+        return 0;
 }

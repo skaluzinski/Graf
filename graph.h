@@ -1,32 +1,33 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-/*
-typedef struct node{
-    int nOfNode;
-    int edgesAmount;
-    edge_t *edges;
-} node_t;
-
-typedef struct edge{
-    node_t *destination;
-    double weight;
-} edge_t;
-
-typedef struct graph{
+//A graph is an array od adjanc. list
+//Size of an array is number of vertices in our graph 
+typedef struct Graph{
+    int nOfVert;
+    double min; 
+    double max;
+    int columns;
     int rows;
-    int cols;
-    int min;
-    int max;
-    node_t* nodes;
-} graph_t;
+    struct AdjList *array;
+}Graph;
 
+//Each element of array consists link (a "head") to a list of neighbours of def vertix 
+typedef struct AdjList {
+    struct Node *head;
+}AdjList;
 
-graph_t readGraph(char* nameOfFile);
-graph_t generateGraph(int rows, int columns, double min, double max);
-int checkIntegrity(graph_t graph);
-double* findPath(graph_t graph);
-*/
-double generateWeight(double min, double max);
+typedef struct Node{
+    double weight;
+    int dest;
+    struct Node *next;
+}Node;
+
+double GenWeight(double min, double max);
+Node* addNode(int dest, Graph* graph);
+void addEdge(Graph *graph, int parent, int dest);
+void printGraph(Graph* graph);
+void genEdges(Graph *graph);
+Graph* genGraph (double min, double max, int columns, int rows);
 
 #endif
