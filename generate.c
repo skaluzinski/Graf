@@ -121,7 +121,3 @@ int writeGraphToFile(Graph* graph, char* name){
     fclose(fptr);
     return 0;
 }
-
-
-
-    
