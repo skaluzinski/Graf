@@ -29,5 +29,5 @@ void addEdge(Graph *graph, int parent, int dest);
 void printGraph(Graph* graph);
 void genEdges(Graph *graph);
 Graph* genGraph (double min, double max, int columns, int rows);
-
+int writeGraphToFile(Graph* graph, char* name);
 #endif
