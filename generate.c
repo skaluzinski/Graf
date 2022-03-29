@@ -4,19 +4,19 @@
 #include"graph.h"
 
 
-double genWeight(double min, double max)
+double GenWeight(double min, double max)
 {
     float random = ((double) rand()) / (double) RAND_MAX;
     double range = max - min;
-    double weight = (random*range) + min;  
-    return weight;
+    double waga = (random*range) + min;  
+    return waga;
     
 } 
 
 Node* addNode(int dest, Graph* graph){
-    Node* newNode = malloc(sizeof(Node));
+    Node* newNode = (struct Node*)malloc(sizeof(Node));
     newNode->dest =dest;
-    newNode->weight = genWeight(graph->min, graph->max);
+    newNode->weight = GenWeight(graph->min, graph->max);
     newNode->next = NULL;
     return newNode;
 }
@@ -25,33 +25,33 @@ void addEdge(Graph *graph, int parent, int dest){
     struct Node* temp = NULL;
     struct Node *newNode = addNode(dest, graph);
 
-    temp = graph->array[parent].head;
-    if(temp == NULL){              //If we sill do not have "neighbours" 
-        newNode->next = temp;      //we add pointer newNode -> next NULL
-        temp = newNode;            //And our head will point to newNode
-    } 
-    else {               
+
+    if(graph->array[parent].head == NULL){              //If we sill do not have "neighbours" 
+        newNode->next = graph->array[parent].head;      //we add pointer newNode -> next NULL
+        graph->array[parent].head = newNode;            //And our head will point to newNode
+    } else {
+        temp = graph->array[parent].head;               
         while(temp->next != NULL){                      //If head already points to node
             temp = temp->next;                          //then we it-rate trough the list of our nodes till we find NULL
         }
         temp->next = newNode;                           //At the end of the list we add newNode
-        newNode->next = NULL;                        //and we add next pointer wich value is NULL
+        temp->next->next = NULL;                        //and we add next pointer wich value is NULL
     }
 
     //also add an edge from dest to parent
     newNode = addNode(parent, graph);
-    temp = graph->array[dest].head;
-    	if (temp == NULL) {
-            newNode->next = temp;
-            temp = newNode;
+    	if (graph->array[dest].head == NULL) {
+		newNode->next = graph->array[dest].head;
+		graph->array[dest].head = newNode;
 	}
 	else {
+        temp = graph->array[dest].head;
         while (temp->next != NULL) {
-            temp = temp->next;
+        temp = temp->next;
         }
         temp->next = newNode;
-        newNode->next = NULL; 
-    }
+        temp->next->next = NULL; 
+}
 }
 
 void printGraph(Graph* graph){
@@ -87,13 +87,13 @@ void genEdges(Graph *graph){
 
 Graph*  genGraph (double min, double max, int columns, int rows){
     int numOfVert = columns*rows;
-    Graph* graph = malloc(sizeof(Graph));
+    Graph* graph = (Graph*)malloc(sizeof(Graph));
     graph->min = min;
     graph->max = max;
     graph->nOfVert = numOfVert;
     graph->columns = columns;
     graph->rows = rows;
-    graph->array =malloc(sizeof(AdjList)*numOfVert);
+    graph->array =(struct AdjList*)malloc(sizeof(AdjList)*numOfVert);
 
     //Initializing each adjacency list as empty
     for (int i = 0; i < numOfVert; i++){
@@ -103,7 +103,24 @@ Graph*  genGraph (double min, double max, int columns, int rows){
 
     return graph;
 }
-
+int writeGraphToFile(Graph* graph, char* name){
+    FILE *fptr;
+    int row, col, nodeNum;
+    Node *tempNode;
+    fptr = fopen(name, "w");
+    fprintf(fptr,"%d %d\n",graph->columns,graph->rows);
+    for(int i = 0; i < graph->nOfVert; i++){
+        Node* nodes = graph->array[i].head;
+        fprintf(fptr,"\t");
+        while(nodes){
+            fprintf(fptr," %d:%lf ", nodes->dest, nodes->weight);
+            nodes = nodes->next;
+        }
+        fprintf(fptr,"\n");
+    }
+    fclose(fptr);
+    return 0;
+}
 
 
 
