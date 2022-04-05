@@ -29,5 +29,8 @@ void addEdge(Graph *graph, int parent, int dest);
 void printGraph(Graph* graph);
 void genEdges(Graph *graph);
 Graph* genGraph (double min, double max, int columns, int rows);
+Node* addNodeFromFile(int dest, Graph* graph, double weight);
+void addEdgeFromFile(Graph *graph, int parent, int dest, double weight);
+Graph *readGraph(char *nameOfFile);
 
 #endif

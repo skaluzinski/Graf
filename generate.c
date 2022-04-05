@@ -104,6 +104,66 @@ Graph*  genGraph (double min, double max, int columns, int rows){
     return graph;
 }
 
+Node* addNodeFromFile(int dest, Graph* graph, double weight){
+    Node* newNode = (struct Node*)malloc(sizeof(Node));
+    newNode->dest =dest;
+    newNode->weight = weight;
+    newNode->next = NULL;
+    return newNode;
+}
+void addEdgeFromFile(Graph *graph, int parent, int dest, double weight){
+    struct Node* temp = NULL;
+    struct Node *newNode = addNodeFromFile(dest, graph,weight);
+
+
+    if(graph->array[parent].head == NULL){            
+        newNode->next = graph->array[parent].head;      
+        graph->array[parent].head = newNode;            
+    } else {
+        temp = graph->array[parent].head;               
+        while(temp->next != NULL){                     
+            temp = temp->next;                         
+        }
+        temp->next = newNode;                         
+        temp->next->next = NULL;                        
+    }
+
+    
+}
+
+Graph *readGraph(char *nameOfFile){
+    Graph* graph = (Graph*)malloc(sizeof(Graph));
+    FILE *in = fopen(nameOfFile,"r");
+    if(!in)
+        return NULL;
+    
+    int columns;
+    int rows;
+    if (fscanf(in,"%d %d", &columns,&rows)!= 2)
+        return NULL;
+    graph->columns = columns;
+    graph->rows = rows;
+    graph->nOfVert = rows*columns;
+    graph->array =(struct AdjList*)malloc(sizeof(AdjList)*graph->nOfVert);
+    double weight;
+    while(fgetc(in) == ' ');
+     for (int i = 0; i < graph->nOfVert; i++){
+        graph->array[i].head = NULL;
+    }
+     int j, index, dest = 0;
+     j = 0;
+    while(!feof(in)){
+        fscanf(in, "%d:%lf", &dest, &weight);
+        addEdgeFromFile(graph,j,dest,weight);
+        char c = fgetc(in);
+        if(c =='\n'){
+            j++;
+            printf("%d\n",j);
+        }
+    }
+
+    return graph;
+}
 
 
 
