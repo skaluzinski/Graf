@@ -165,6 +165,21 @@ Graph *readGraph(char *nameOfFile){
     return graph;
 }
 
-
-
-    
+int writeGraphToFile(Graph* graph, char* name){
+    FILE *fptr;
+    int row, col, nodeNum;
+    Node *tempNode;
+    fptr = fopen(name, "w");
+    fprintf(fptr,"%d %d\n",graph->columns,graph->rows);
+    for(int i = 0; i < graph->nOfVert; i++){
+        Node* nodes = graph->array[i].head;
+        fprintf(fptr,"\t");
+        while(nodes){
+            fprintf(fptr," %d:%lf ", nodes->dest, nodes->weight);
+            nodes = nodes->next;
+        }
+        fprintf(fptr,"\n");
+    }
+    fclose(fptr);
+    return 0;
+}
