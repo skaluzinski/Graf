@@ -127,6 +127,19 @@ void addEdgeFromFile(Graph *graph, int parent, int dest, double weight){
         temp->next = newNode;                         
         temp->next->next = NULL;                        
     }
+    newNode = addNodeFromFile(parent, graph, weight);
+    	if (graph->array[dest].head == NULL) {
+		newNode->next = graph->array[dest].head;
+		graph->array[dest].head = newNode;
+	}
+	else {
+        temp = graph->array[dest].head;
+        while (temp->next != NULL) {
+        temp = temp->next;
+        }
+        temp->next = newNode;
+        temp->next->next = NULL; 
+}
 
     
 }
@@ -152,12 +165,13 @@ Graph *readGraph(char *nameOfFile){
     }
      int j, index, dest = 0;
      j = 0;
-    while(!feof(in)){
-        fscanf(in, "%d:%lf", &dest, &weight);
+    while(!feof(in)){      
+        fscanf(in, "%d :%lf", &dest, &weight);
         addEdgeFromFile(graph,j,dest,weight);
         char c = fgetc(in);
-        if(c =='\n'){
+        if(c == '\n'){
             j++;
+            printf("JESTEM J I JESTEM %d\n", j);
             printf("%d\n",j);
         }
     }
