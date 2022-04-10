@@ -33,4 +33,6 @@ Node* addNodeFromFile(int dest, Graph* graph, double weight);
 void addEdgeFromFile(Graph *graph, int parent, int dest, double weight);
 Graph *readGraph(char *nameOfFile);
 int writeGraphToFile(Graph* graph, char* name);
+double AlgDijkstry(Graph *graph, int start, int finish);
+
 #endif

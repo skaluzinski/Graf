@@ -20,6 +20,14 @@ Node* addNode(int dest, Graph* graph){
     newNode->next = NULL;
     return newNode;
 }
+Node *addNodeParent(int dest, Graph *graph, double weightChild)
+{
+    Node *newNode = (struct Node *)malloc(sizeof(Node));
+    newNode->dest = dest;
+    newNode->weight = weightChild;
+    newNode->next = NULL;
+    return newNode;
+}
 
 void addEdge(Graph *graph, int parent, int dest){
     struct Node* temp = NULL;
@@ -39,18 +47,21 @@ void addEdge(Graph *graph, int parent, int dest){
     }
 
     //also add an edge from dest to parent
-    newNode = addNode(parent, graph);
-    	if (graph->array[dest].head == NULL) {
-		newNode->next = graph->array[dest].head;
-		graph->array[dest].head = newNode;
-	}
-	else {
+    struct Node *newNodeParent = addNodeParent(parent, graph, newNode->weight);
+    if (graph->array[dest].head == NULL)
+    {
+        newNodeParent->next = graph->array[dest].head;
+        graph->array[dest].head = newNodeParent;
+    }
+    else
+    {
         temp = graph->array[dest].head;
-        while (temp->next != NULL) {
-        temp = temp->next;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
         }
-        temp->next = newNode;
-        temp->next->next = NULL; 
+        temp->next = newNodeParent;
+        temp->next->next = NULL;
 }
 }
 
@@ -171,7 +182,6 @@ Graph *readGraph(char *nameOfFile){
         char c = fgetc(in);
         if(c == '\n'){
             j++;
-            printf("JESTEM J I JESTEM %d\n", j);
             printf("%d\n",j);
         }
     }
