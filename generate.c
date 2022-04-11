@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include<stdlib.h>
+#include <string.h>
 #include<time.h>
 #include"graph.h"
-
+#define NODE 2
+#define VERTEX 1
 
 double GenWeight(double min, double max)
 {
@@ -138,19 +140,6 @@ void addEdgeFromFile(Graph *graph, int parent, int dest, double weight){
         temp->next = newNode;                         
         temp->next->next = NULL;                        
     }
-    newNode = addNodeFromFile(parent, graph, weight);
-    	if (graph->array[dest].head == NULL) {
-		newNode->next = graph->array[dest].head;
-		graph->array[dest].head = newNode;
-	}
-	else {
-        temp = graph->array[dest].head;
-        while (temp->next != NULL) {
-        temp = temp->next;
-        }
-        temp->next = newNode;
-        temp->next->next = NULL; 
-}
 
     
 }
@@ -161,28 +150,25 @@ Graph *readGraph(char *nameOfFile){
     if(!in)
         return NULL;
     
-    int columns;
-    int rows;
-    if (fscanf(in,"%d %d", &columns,&rows)!= 2)
+    if (fscanf(in,"%d %d", &graph->columns,&graph->rows)!= 2)
         return NULL;
-    graph->columns = columns;
-    graph->rows = rows;
-    graph->nOfVert = rows*columns;
+    char c;
+    graph->nOfVert = graph->columns*graph->rows;
     graph->array =(struct AdjList*)malloc(sizeof(AdjList)*graph->nOfVert);
     double weight;
     while(fgetc(in) == ' ');
      for (int i = 0; i < graph->nOfVert; i++){
         graph->array[i].head = NULL;
     }
-     int j, index, dest = 0;
-     j = 0;
+     int nodeNum, index, dest = 0;
+     nodeNum = 0;
     while(!feof(in)){      
         fscanf(in, "%d :%lf", &dest, &weight);
-        addEdgeFromFile(graph,j,dest,weight);
-        char c = fgetc(in);
-        if(c == '\n'){
-            j++;
-            printf("%d\n",j);
+        addEdgeFromFile(graph,nodeNum,dest,weight);
+        c = fgetc(in);
+        c = fgetc(in);
+        if(c == '\n' ){
+            nodeNum++;
         }
     }
 
