@@ -1,5 +1,5 @@
 graf: graf.c generate.c bfs.c dijkstra.c graph.h 
-		$(CC) -o graf graf.c generate.c graph.h dijkstra.c -ggdb
+		$(CC) -o graf main.c generate.c graph.h dijkstra.c -ggdb
 
 test1: test1.c generate.c
 				$(CC) -o test1 test1.c generate.c
