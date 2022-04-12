@@ -15,7 +15,6 @@ struct queueNode* newItem(int item)
 int queuePop(struct Queue* queue)
 {
 	if (queue->front == NULL){
-		printf("Kolejka jest pusta!\n");
 		return -1;
 	}
 	int lastElement = queue->back->item; 
@@ -24,7 +23,6 @@ int queuePop(struct Queue* queue)
 
 	if (queue->front == NULL){
 	    queue->back = NULL;
-		printf("Kolejka jest pusta!\n");
 	}
 	free(temp);
     return lastElement;
@@ -53,6 +51,8 @@ void queueAdd(struct Queue* queue, int item)
 
 int bfs(int source, Graph graph){
     struct Queue* queue;
+    int node;printf("11111\n");
+
     queue = malloc(sizeof(struct Queue));
     queue->front = NULL;
     queue->back = NULL;
@@ -62,7 +62,6 @@ int bfs(int source, Graph graph){
     int nOfNeightbours;
     int *neighbours;
     neighbours = malloc(graph.nOfVert * graph.nOfVert);
-    int node;
     queueAdd(queue,source);
     int* visited; 
     visited = malloc(graph.nOfVert *  sizeof(int));
@@ -92,10 +91,8 @@ int bfs(int source, Graph graph){
     }
     for(i = 0; i<graph.nOfVert; i++){
         if(visited[i] != 1){
-            printf("Graf nie jest spójny.\n");
             return -1;
             }
     }
-    printf("Graf jest spójny.\n");
     return 0;
 }
