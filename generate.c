@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include <string.h>
-#include<time.h>
-#include"graph.h"
+#include <time.h>
+#include "graph.h"
 #define NODE 2
 #define VERTEX 1
 
@@ -147,11 +147,14 @@ void addEdgeFromFile(Graph *graph, int parent, int dest, double weight){
 Graph *readGraph(char *nameOfFile){
     Graph* graph = (Graph*)malloc(sizeof(Graph));
     FILE *in = fopen(nameOfFile,"r");
-    if(!in)
+    if(in == NULL){
+	printf("This file doesn't exist.\n");
         return NULL;
+}
     
     if (fscanf(in,"%d %d", &graph->columns,&graph->rows)!= 2)
-        return NULL;
+        {printf("fail2\n");
+	return NULL;}
     char c;
     graph->nOfVert = graph->columns*graph->rows;
     graph->array =(struct AdjList*)malloc(sizeof(AdjList)*graph->nOfVert);
