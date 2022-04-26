@@ -51,13 +51,11 @@ void queueAdd(struct Queue* queue, int item)
 
 int bfs(int source, Graph graph){
     struct Queue* queue;
-    int node;printf("11111\n");
-
+    int node;
     queue = malloc(sizeof(struct Queue));
     queue->front = NULL;
     queue->back = NULL;
     struct Node* temp;
-    int i;
     int next;
     int nOfNeightbours;
     int *neighbours;
@@ -71,6 +69,8 @@ int bfs(int source, Graph graph){
         previous[i]=0;
     }
     visited[source] = 1;
+    printGraph(&graph);
+    
     while(queue->front != NULL){
         node = queuePop(queue);
         nOfNeightbours = 0;
@@ -80,17 +80,19 @@ int bfs(int source, Graph graph){
             nOfNeightbours++;
             temp = temp->next;
         }
-        for( i = 0; i < nOfNeightbours; i++){
+        for(int i = 0; i <= nOfNeightbours; i++){
             next = neighbours[i] ;
             if( visited[next] != 1){
                 queueAdd(queue,next);
                 visited[next] = 1;
+                printf("%d",next);
                 previous[next] = node;
             }
         }
     }
-    for(i = 0; i<graph.nOfVert; i++){
+    for(int i = 0; i<graph.nOfVert; i++){
         if(visited[i] != 1){
+            printf("nie ma połączenia %d\n.",i);
             return -1;
             }
     }

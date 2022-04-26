@@ -34,5 +34,5 @@ void addEdgeFromFile(Graph *graph, int parent, int dest, double weight);
 Graph *readGraph(char *nameOfFile);
 int writeGraphToFile(Graph* graph, char* name);
 double AlgDijkstry(Graph *graph, int start, int finish);
-
+void freeGraph(Graph *graph);
 #endif

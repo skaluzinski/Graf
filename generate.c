@@ -72,8 +72,9 @@ void printGraph(Graph* graph){
         Node* nodes = graph->array[i].head;
         printf("\n Adjacency list of vertex %d\n head ", i);
         while(nodes){
-            printf("-> %d [waga] %lf", nodes->dest, nodes->weight);
+            
 			nodes = nodes->next;
+			printf("-> %d [waga] %lf", nodes->dest, nodes->weight);
         }
     }
 }
@@ -125,9 +126,9 @@ Node* addNodeFromFile(int dest, Graph* graph, double weight){
     return newNode;
 }
 void addEdgeFromFile(Graph *graph, int parent, int dest, double weight){
-    struct Node* temp = NULL;
+    struct Node* temp;
     struct Node *newNode = addNodeFromFile(dest, graph,weight);
-
+    temp = NULL;
 
     if(graph->array[parent].head == NULL){            
         newNode->next = graph->array[parent].head;      
@@ -138,44 +139,64 @@ void addEdgeFromFile(Graph *graph, int parent, int dest, double weight){
             temp = temp->next;                         
         }
         temp->next = newNode;                         
-        temp->next->next = NULL;                        
+        temp->next->next = NULL;                       
     }
-
-    
 }
 
 Graph *readGraph(char *nameOfFile){
-    Graph* graph = (Graph*)malloc(sizeof(Graph));
+    int nodeNum = 0, parent = 0,size;
+    Graph* graph = malloc(sizeof(Graph));
     FILE *in = fopen(nameOfFile,"r");
     if(in == NULL){
-	printf("This file doesn't exist.\n");
+	    printf("Couldn't open the file.\n");
         return NULL;
-}
-    
-    if (fscanf(in,"%d %d", &graph->columns,&graph->rows)!= 2)
-        {printf("fail2\n");
-	return NULL;}
-    char c;
+    }
+    fseek(in, 0, SEEK_END); // seek to end of file
+    size = ftell(in); // get current file pointer
+    fseek(in, 0, SEEK_SET);
+    if (fscanf(in,"%d %d", &graph->columns,&graph->rows)!= 2){
+        printf("Couldn't read columns and rows.\n");
+	    return NULL;
+    }
     graph->nOfVert = graph->columns*graph->rows;
-    graph->array =(struct AdjList*)malloc(sizeof(AdjList)*graph->nOfVert);
+    graph->array =malloc(sizeof(AdjList)*graph->nOfVert);
     double weight;
-    while(fgetc(in) == ' ');
-     for (int i = 0; i < graph->nOfVert; i++){
+    /*for (int i = 0; i < graph->nOfVert; i++){
         graph->array[i].head = NULL;
-    }
-     int nodeNum, index, dest = 0;
-     nodeNum = 0;
-    while(!feof(in)){      
-        fscanf(in, "%d :%lf", &dest, &weight);
-        addEdgeFromFile(graph,nodeNum,dest,weight);
-        c = fgetc(in);
-        c = fgetc(in);
-        if(c == '\n' ){
-            nodeNum++;
+    }*/
+    
+    
+    char *line =  malloc(size * sizeof(char));
+    char* ptr;
+    int part = NODE;
+    while (fgets(line, 1024, in))
+    {
+        do {
+            double num = strtod(line, &ptr);
+            if(ptr == line) {
+              if(strcmp(ptr,"\n")==0){
+                parent++;
+                break;
+              }
+              fprintf(stderr, "invalid format\n");
+              break;
+            }
+            if(part == NODE){
+                nodeNum = (int)num;
+                part = VERTEX;
+            }
+            else{
+                weight = num;
+                part = NODE;
+                //printf("%d->%d  %lf ",parent-1,nodeNum,weight);
+                addEdgeFromFile(graph,parent-1,nodeNum,weight);
+            }
+            if(*ptr == ':' || *ptr == ' ') ptr++;
+            line = ptr;
+            } while(*ptr);
         }
-    }
-
-    return graph;
+        //printGraph(graph);
+        return graph;
 }
 
 int writeGraphToFile(Graph* graph, char* name){
@@ -191,8 +212,26 @@ int writeGraphToFile(Graph* graph, char* name){
             fprintf(fptr," %d:%lf ", nodes->dest, nodes->weight);
             nodes = nodes->next;
         }
+        if(i == graph->nOfVert -1)
+            continue;
         fprintf(fptr,"\n");
     }
     fclose(fptr);
     return 0;
+}
+
+
+void freeGraph(Graph *graph){
+    Node* temp,*head;
+    int i;
+    for(i=0;i< graph->nOfVert;i++){
+        head = graph->array[i].head;
+        while(head != NULL){
+            temp = head;
+            head = head->next;
+            free(temp);
+        }
+    }
+    free(graph);
+    
 }

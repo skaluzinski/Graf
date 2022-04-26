@@ -134,7 +134,11 @@ int* findPath(Graph graph,int start,int end){
         printf("Nie istnieje scieżka od %d do %d.\n",start,end);
         return NULL;
     }
-    if(end > graph.nOfVert){
+    if(end >= graph.nOfVert || start <0){
+        printf("Węzeł %d nie znajduje się w tym grafie, ma on numery od 0 do %d",start,graph.nOfVert-1);
+        return NULL;
+    }
+    if(end >= graph.nOfVert || end <0){
         printf("Węzeł %d nie znajduje się w tym grafie, ma on numery od 0 do %d",end,graph.nOfVert-1);
         return NULL;
     }
