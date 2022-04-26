@@ -19,16 +19,14 @@
                 return 1;
             }
             Graph *graph = readGraph(argv[2]);
-            //printGraph(graph);
-            printf("%d %d",graph->rows,graph->columns);
             if(graph == NULL){
                 printf("Nie udało się odczytać pliku %s.\n",argv[2]);
-                //freeGraph(graph);
+                freeGraph(graph);
                 return 1;
             }
             writeGraphToFile(graph,"test1");
             printf("Udało się odczytać graf z pliku %s.\n ",argv[2]);
-            //freeGraph(graph);
+            freeGraph(graph);
             return 0; 
         }
         if(!strcmp(argv[1],"--generate")){
@@ -62,9 +60,10 @@
             Graph *graph = genGraph(min,max,cols,rows);
             if(writeGraphToFile(graph,argv[6]) != 0){
                 printf("Nie udało się zapisać do pliku grafu.");
-                //freeGraph(graph);
+                freeGraph(graph);
                 return 1;
             }
+            freeGraph(graph);
             printf("Graf został zapisany pomyślnie w pliku %s. \n",argv[6]);
 	        return 0;
         }
@@ -76,19 +75,17 @@
             }
 	        char* name;
 	        name = malloc(1024);
-	        // printf("%s",argv[2]);
-	        //sscanf(argv[2],"%s",name);
 	        strcpy(name, argv[2]);
             Graph *graph = readGraph(name);
 	   
             if (bfs(0,*graph) != 0){
                 printf("Graf nie jest spójny.\n");
-                //freeGraph(graph);
+                freeGraph(graph);
                 return -1;
             }
 
             printf("Graf jest spójny.\n");
-            //freeGraph(graph);
+            freeGraph(graph);
             return 0;
         }
         if(!strcmp(argv[1],"--findPath")){
@@ -107,7 +104,7 @@
 	        }
             Graph *graph = readGraph(argv[2]);
 	        findPath(*graph,from,to);
-	        //freeGraph(graph);
+	        freeGraph(graph);
         }
         
         return 0;

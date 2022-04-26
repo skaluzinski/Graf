@@ -222,16 +222,19 @@ int writeGraphToFile(Graph* graph, char* name){
 
 
 void freeGraph(Graph *graph){
+        //Moze tutaj sprobowac inicjalizowac odrazu np temp, head = NULL;
     Node* temp,*head;
-    int i;
-    for(i=0;i< graph->nOfVert;i++){
+    temp, head = NULL;
+
+    for(int i = 0; i < graph->nOfVert; i++){
         head = graph->array[i].head;
-        while(head != NULL){
-            temp = head;
-            head = head->next;
+        temp = head;
+        while(temp != NULL){
             free(temp);
+            temp = temp->next;
         }
+
     }
     free(graph);
-    
+
 }
