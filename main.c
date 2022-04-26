@@ -5,7 +5,7 @@
 #include "graph.h"
 #include "dijkstra.h"
 #include "bfs.h"
-
+#include "bfs.c"
     int main(int argc, char **argv){
         srand(time(NULL));
         char *help = "\n --generate min max cols rows name\n --read name\n --checkIntegrity name\n --findPath name from to\n";
@@ -80,7 +80,7 @@
 	        //sscanf(argv[2],"%s",name);
 	        strcpy(name, argv[2]);
             Graph *graph = readGraph(name);
-	        printf("%d\n",graph->nOfVert);
+	   
             if (bfs(0,*graph) != 0){
                 printf("Graf nie jest spójny.\n");
                 //freeGraph(graph);

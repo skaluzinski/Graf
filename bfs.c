@@ -69,7 +69,6 @@ int bfs(int source, Graph graph){
         previous[i]=0;
     }
     visited[source] = 1;
-    printGraph(&graph);
     
     while(queue->front != NULL){
         node = queuePop(queue);
@@ -85,7 +84,7 @@ int bfs(int source, Graph graph){
             if( visited[next] != 1){
                 queueAdd(queue,next);
                 visited[next] = 1;
-                printf("%d",next);
+                
                 previous[next] = node;
             }
         }

@@ -12,5 +12,5 @@ testReading: testRead.c generate.c
 .PHONY: clean
 				
 clean:
-				rm -f test1Graf test1 testBfs grafBfs generatedGraph readGraph testReading
+				rm -f test1Graf test1 testBfs grafBfs generatedGraph readGraph testReading graf
 
