@@ -105,8 +105,10 @@
             Graph *graph = readGraph(argv[2]);
 	        findPath(*graph,from,to);
 	        freeGraph(graph);
+            return 0;
         }
-        
-        return 0;
+        printf("%s\n",help);
+        return -1;
+
 }
 
